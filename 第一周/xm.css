@@ -1,0 +1,432 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.w {
+  width: 1226px;
+  margin: 0 auto;
+}
+
+a {
+  text-decoration: none;
+}
+
+ul li {
+  list-style: none;
+}
+
+.top {
+  position: relative;
+  z-index: 30;
+  width: 100%;
+  height: 40px;
+  font-size: 12px;
+  color: #b0b0b0;
+  background-color: #333;
+}
+
+.top .w {
+  position: relative;
+  height: 40px;
+}
+
+.top .w .left {
+  position: absolute;
+  left: 0;
+  height: 40px;
+  border-color: blue;
+}
+
+.top .w .right {
+  position: absolute;
+  right: 0;
+  height: 40px;
+  border-color: red;
+}
+
+.top .w .left ul,
+.top .w .right ul {
+  display: flex;
+  position: relative;
+  height: 40px;
+  justify-content: center;
+  align-items: center;
+  list-style: none;
+}
+
+.top a {
+  text-decoration: none;
+  color: #b0b0b0;
+}
+
+.top a:hover {
+  color: #fff;
+}
+
+.top .line {
+  width: 1px;
+  height: 12px;
+  margin: 0 10px;
+  background-color: #424242;
+}
+
+.top .cart {
+  width: 120px;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  position: relative;
+  background-color: #424242;
+}
+
+/* 盒子hover效果设置 */
+.top .cart:hover {
+  background-color: #fff;
+}
+
+/* 不会的部分，重点掌握 */
+.top .cart:hover>a {
+  color: #ff6700;
+}
+
+.cart i {
+  font-style: normal;
+  margin-right: 8px;
+}
+
+.cart-list {
+  width: 316px;
+  height: 0;
+  position: absolute;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+  top: 40px;
+  right: 0;
+  color: #424242;
+  overflow: hidden;
+  line-height: 100px;
+}
+
+/* .cart-list:hover{
+  height: 100px;
+ } */
+.cart:hover>.cart-list {
+  height: 100px;
+}
+
+.header .w {
+  height: 100px;
+  background-color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header .w .logo {
+  height: 55px;
+  width: 55px;
+}
+
+.logo h1 {
+  width: 100%;
+  height: 100%;
+}
+
+.logo h1 a {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: url(images/小米图标.png) center center no-repeat;
+  text-indent: -9999px;
+  overflow: hidden;
+}
+
+.nav-bar {
+  width: 875px;
+  height: 100px;
+  padding-left: 30px;
+  padding-top: 12px;
+  line-height: 100px;
+}
+
+.nav-bar ul {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 88px;
+  list-style: none;
+}
+
+.nav-bar ul li {
+  padding: 0 10px;
+  height: 88px;
+  display: flex;
+  align-items: center;
+}
+
+.nav-bar ul li a {
+  display: block;
+  height: 88px;
+  line-height: 88px;
+  text-decoration: none;
+  color: #333;
+}
+
+.nav-bar ul li a:hover {
+  color: #ff6700;
+}
+
+.search {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 296px;
+  height: 100px;
+}
+
+.search input {
+  width: 244px;
+  height: 50px;
+  padding-left: 10px;
+  /* 默认边框导致下面的按钮被冲下来了 */
+  /* outline: none; 没用*/
+  /* box-sizing: border-box;让我们重置的边框不会撑大盒子 eee这也没用，我最后用flex解决了*/
+  outline: none;
+  border: 1px solid #b0b0b0;
+  border-right: none;
+  box-sizing: border-box;
+}
+
+.search button {
+  width: 52px;
+  height: 50px;
+  background-color: #fff;
+  outline: none;
+  border: 1px solid #b0b0b0;
+  box-sizing: border-box;
+  font-size: 20px;
+}
+
+.search button:hover {
+  background-color: #ff6700;
+  color: #fff;
+  /* 原来这个也可以该图标颜色，也就是说icon图标相当于文字这样 */
+}
+
+.search input::placeholder {
+  color: #999;
+  font-size: 14px;
+}
+
+.search input:focus {
+  border-color: #ff6700;
+}
+
+.search input:focus+button {
+  border-color: #ff6700;
+}
+
+.banner .w {
+  position: relative;
+  height: 460px;
+}
+
+.box img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  opacity: 0;
+}
+
+.box img:first-child {
+  opacity: 1;
+}
+
+.banner .slide {
+  width: 234px;
+  height: 460px;
+  padding: 20px 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: rgba(105, 101, 101, 0.6);
+  z-index: 30;
+}
+
+.slide ul li {
+  position: relative;
+  height: 42px;
+  line-height: 42px;
+  text-align: left;
+  padding-left: 30px;
+  font-size: 14px;
+}
+
+.slide ul li a {
+  color: #fff;
+}
+
+.slide ul li:hover {
+  background-color: #ff6700;
+}
+
+.slide ul li a i {
+  position: absolute;
+  right: 20px;
+  font-size: 14px;
+}
+
+.box-left {
+  position: absolute;
+  left: 234px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 41px;
+  height: 69px;
+  line-height: 69px;
+  text-align: center;
+  color: #ccc;
+  /* font-size: 24px; 这样写没用*/
+}
+
+.box-left i {
+  font-size: 27px;
+}
+
+.box-left:hover {
+  background-color: #00000050;
+  color: #fff;
+}
+
+.box-right {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 41px;
+  height: 69px;
+  line-height: 69px;
+  text-align: center;
+  color: #b0b0b0;
+  /* font-size: 24px; 这样写没用*/
+}
+
+.box-right i {
+  font-size: 27px;
+}
+
+.box-right:hover {
+  background-color: #00000050;
+  color: #fff;
+}
+
+.box-dian {
+  position: absolute;
+  bottom: 26px;
+  right: 50px;
+}
+
+.box-dian ul li {
+  width: 10px;
+  height: 10px;
+  border-radius: 100%;
+  border: 2px solid #ccc;
+  background-color: #00000050;
+  float: left;
+  margin: 0 4px;
+}
+
+.box-dian ul li:hover {
+  border: 2px solid #00000050;
+  background-color: #ccc;
+}
+
+.box-dian ul li:first-child {
+  border: 2px solid #00000050;
+  background-color: #ccc;
+}
+
+.box-left,
+.box-right {
+  z-index: 40;
+}
+
+.footer {
+  width: 100%;
+  height: 198px;
+  padding: 14px 0;
+  background-color: #fff;
+}
+
+.footer .w {
+  height: 170px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer-left {
+  width: 234px;
+  height: 170px;
+  background-color: #5f5750;
+}
+
+.footer-left ul {
+  height: 170px;
+  display: grid;
+  justify-content: space-around;
+  align-items: space-around;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+}
+
+.footer-left ul li a {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* 可以移除固定高度，让内容自适应 */
+  padding-top: 20px;
+  color: #fff;
+  opacity: 0.5;
+}
+
+.footer-left ul li a i {
+
+  font-size: 24px;
+}
+
+.footer-left ul li a p {
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.footer-left ul li a:hover {
+  opacity: 1;
+}
+
+.footer-right {
+  flex: 1;
+  height: 170px;
+  background-color: #fff;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+
+}
+
+.footer-right div {
+  margin-left: 15px;
+  height: 170px;
+}
+
+.footer-right div img {
+  width: 100%;
+}
+
+.footer-right div:hover {
+  box-shadow: 0 5px 15px #00000050;
+}
