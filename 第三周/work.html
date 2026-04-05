@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>工艺管理</title>
+  <link rel="stylesheet" href="work.css" />
+</head>
+
+<body>
+  <div class="container">
+    <!-- 第1列：标准工序库 -->
+    <div class="card col1">
+      <div class="title">标准工序库</div>
+      <div class="tip">拖拽到右侧编辑区</div>
+      <ul>
+        <li draggable="true">原料切割</li>
+        <li draggable="true">粗加工</li>
+        <li draggable="true">精加工</li>
+        <li draggable="true">表面处理</li>
+        <li draggable="true">质量检测</li>
+        <li draggable="true">包装入库</li>
+      </ul>
+    </div>
+
+    <!-- 第2列：工艺列表 -->
+    <div class="card col2">
+      <div class="top">
+        <div class="title">工艺列表</div>
+        <button class="btn btn-blue">新建工艺</button>
+      </div>
+      <ul>
+        <!-- <li>新工艺1</li>
+        <li>新工艺2</li> -->
+      </ul>
+      <button class="btn btn-red">删除当前工艺</button>
+    </div>
+
+    <!-- 第3列：工艺编辑区 -->
+    <div class="card col3">
+      <div class="right-head">
+        <div>工艺：新工艺</div>
+        <div class="btn-group">
+          <button class="btn btn-gray">清空工序</button>
+          <button class="btn btn-blue">保存工艺</button>
+        </div>
+      </div>
+      <div class="tab-content">
+        <!-- <div class="drop-area1">
+         <span>将左侧工序拖放到此处</span> 
+      </div> -->
+      </div>
+
+    </div>
+  </div>
+  <script>
+    const group = document.querySelector('.col3 .btn-group');
+    const ul = document.querySelector('.col2 ul');
+    const btn = document.querySelector('.col2 .btn-blue');
+    const delBtn = document.querySelector('.btn-red');
+    const saveBtn = group.children[1];
+    const clearBtn = group.children[0];
+    const tabContent = document.querySelector('.tab-content');
+
+    // 保存工艺（同时保存每个工艺的工序）
+    function saveLi() {
+      const arr = [];
+
+      // 遍历所有工艺
+      for (let li of ul.children) {
+        const processId = li.dataset.id;
+        // 找到对应工艺的拖动区域
+        const dropArea = document.querySelector(`.drop-area${processId}`);
+        const items = [];
+
+        // 保存该工艺的工序
+        if (dropArea) {
+          for (let item of dropArea.children) {
+            if (item.classList.contains('item')) {
+              items.push({
+                content: item.textContent,
+                item: true
+              });
+            }
+          }
+        }
+
+        arr.push({
+          content: li.innerHTML,
+          active: li.classList.contains('active'),
+          items: items  // 保存工序
+        });
+      }
+
+      // 转成字符串存起来
+      localStorage.setItem('data', JSON.stringify(arr));
+    }
+
+    // 渲染工艺列表和对应的拖动区域
+    function render() {
+      const arr = JSON.parse(localStorage.getItem('data')) || [];
+
+      // 渲染工艺列表
+      const ulArr = arr.map(function (ele, index) {
+        return `
+        <li data-id="${index + 1}" class="${ele.active ? 'active' : ''}">${ele.content}</li>
+      `;
+      });
+      ul.innerHTML = ulArr.join('');
+
+      // 渲染拖动区域
+      tabContent.innerHTML = '';
+      arr.forEach((ele, index) => {
+        const dropArea = document.createElement('div');
+        dropArea.className = `drop-area${index + 1}`;
+        if (ele.active) {
+          dropArea.classList.add('active');
+          // 更新工艺名称
+          group.previousElementSibling.innerHTML = `工艺：${ele.content}`;
+          // } else {
+          //   dropArea.style.display = 'none'; // 隐藏非活动的拖动区域
+          // }
+        }
+
+        // 渲染工序
+        if (ele.items) {
+          ele.items.forEach(itemData => {
+            const div = document.createElement('div');
+            div.textContent = itemData.content;
+            div.classList.add('item');
+            dropArea.appendChild(div);
+          });
+        }
+
+        tabContent.appendChild(dropArea);
+      });
+
+      // 如果没有工艺，创建默认的
+      if (arr.length === 0) {
+        const defaultLi = document.createElement('li');
+        defaultLi.innerHTML = '新工艺1';
+        defaultLi.dataset.id = '1';
+        ul.appendChild(defaultLi);
+
+        const defaultDropArea = document.createElement('div');
+        defaultDropArea.className = 'drop-area1';
+        tabContent.appendChild(defaultDropArea);
+      }
+
+      // 重新设置拖拽事件
+      setupDropAreas();
+    }
+
+    // 为所有拖动区域设置拖拽事件
+    function setupDropAreas() {
+      const dropAreas = document.querySelectorAll('.tab-content > div');
+      const tabContent = document.querySelector('.tab-content');
+      const dragItems = document.querySelectorAll('li[draggable="true"]');
+
+      // 为每个可拖拽元素添加事件
+      dragItems.forEach(item => {
+        item.addEventListener('dragstart', function (e) {
+          e.dataTransfer.setData('text/plain', item.textContent);
+          item.classList.add('dragging');
+        });
+
+        item.addEventListener('dragend', function (e) {
+          // 阻止默认拖拽行为
+          e.preventDefault();
+          item.classList.remove('dragging');
+        });
+      });
+
+      // 为每个拖动区域添加事件，给tabContent添加drop-over类名而不是给dropArea
+      dropAreas.forEach(dropArea => {
+        // 悬停时
+        dropArea.addEventListener('dragover', function (e) {
+          e.preventDefault();
+          tabContent.classList.add('drop-over');
+        });
+
+        // 离开时
+        dropArea.addEventListener('dragleave', function (e) {
+          tabContent.classList.remove('drop-over');
+        });
+
+        // 放置时
+        dropArea.addEventListener('drop', function (e) {
+          e.preventDefault();
+          tabContent.classList.remove('drop-over');
+          const data = e.dataTransfer.getData('text/plain');
+          const div = document.createElement('div');
+          div.textContent = data;
+          div.classList.add('item');
+          dropArea.appendChild(div);
+
+          // 防止在非拖拽区域松开鼠标时触发搜索
+          document.addEventListener('dragover', function (e) {
+            e.preventDefault();
+          });
+
+          document.addEventListener('drop', function (e) {
+            e.preventDefault();
+          });
+
+          // 自动保存
+          // saveLi();
+        });
+      });
+    }
+
+    // 增工艺
+    btn.addEventListener('click', function () {
+      const li = document.createElement('li');
+      const id = ul.children.length + 1;
+      li.innerHTML = `新工艺${id}`;
+      li.dataset.id = id;
+      ul.appendChild(li);
+
+      // 创建对应的拖动区域
+      const dropArea = document.createElement('div');
+      dropArea.className = `drop-area${id}`;
+      // dropArea.style.display = 'none'
+      tabContent.appendChild(dropArea);
+      // 设置拖拽事件，因为dropArea需要
+      setupDropAreas();
+      // saveLi();
+    });
+
+    // active效果
+    ul.addEventListener('click', function (e) {
+      if (e.target.tagName === 'LI') {
+        const processId = e.target.dataset.id;
+
+        // 移除所有工艺的active类
+        const old1 = document.querySelector('.col2 li.active');
+        if (old1) {
+          old1.classList.remove('active');
+        }
+        e.target.classList.add('active');
+
+        // 移除所有拖动区域的active类
+        const dropAreas = document.querySelectorAll('.tab-content > div');
+        dropAreas.forEach(area => {
+          area.classList.remove('active');
+          // area.style.display = 'none';
+        });
+
+        // 为对应工艺的拖动区域添加active类
+        const targetDropArea = document.querySelector(`.drop-area${processId}`);
+        if (targetDropArea) {
+          targetDropArea.classList.add('active');
+        }
+
+        group.previousElementSibling.innerHTML = `工艺：${e.target.innerHTML}`;
+        // saveLi();
+      }
+    });
+
+    // 删工艺
+    delBtn.addEventListener('click', function () {
+      const activeLi = document.querySelector('.col2 li.active');
+      if (activeLi && confirm('确定删除当前工艺吗？')) {
+        const processId = activeLi.dataset.id;
+        activeLi.remove();
+
+        // 删除对应的拖动区域
+        const dropArea = document.querySelector(`.drop-area${processId}`);
+        if (dropArea) {
+          dropArea.remove();
+        }
+
+        // 重新排序
+        group.previousElementSibling.innerHTML = `工艺：`;
+        for (let i = 0; i < ul.children.length; i++) {
+          ul.children[i].dataset.id = i + 1;
+          ul.children[i].innerHTML = `新工艺${i + 1}`;
+
+          // 更新对应的拖动区域类名
+          const oldDropArea = document.querySelector(`.drop-area${i + 2}`);
+          if (oldDropArea) {
+            oldDropArea.className = `drop-area${i + 1}`;
+          }
+        }
+        saveLi();
+      }
+    });
+
+    // 保存工艺
+    saveBtn.addEventListener('click', function () {
+      alert('保存成功');
+      saveLi();
+      render();
+    });
+
+    // 清空工序
+    clearBtn.addEventListener('click', function () {
+      const activeLi = document.querySelector('.col2 li.active');
+      if (activeLi) {
+        const processId = activeLi.dataset.id;
+        const dropArea = document.querySelector(`.drop-area${processId}`);
+        if (dropArea && confirm('确定清空当前工艺的工序吗？')) {
+          dropArea.innerHTML = '';
+          saveLi();
+        }
+      }
+    });
+
+    // 初始渲染
+    render();
+  </script>
+</body>
+
+</html>
